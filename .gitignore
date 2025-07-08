@@ -4,6 +4,10 @@ __pycache__/
 *$py.class
 **/*.pyc
 
+v6net/
+YOLOv6/v6net/Lib
+YOLOv6/deploy/ONNX/OpenCV/yolov6/CMakeLists.txt
+
 # C extensions
 
 # Distribution / packaging
