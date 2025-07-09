@@ -14,6 +14,22 @@ if str(ROOT) not in sys.path:
 from yolov6.utils.events import LOGGER
 from yolov6.core.inferer import Inferer
 
+import functools
+
+# Store the original torch.load function
+_original_torch_load = torch.load
+
+def custom_torch_load(*args, **kwargs):
+    # If 'weights_only' is not explicitly set, set it to False
+    if 'weights_only' not in kwargs:
+        kwargs['weights_only'] = False
+    print(f"DEBUG: torch.load called with weights_only={kwargs.get('weights_only', 'default_was_True_now_False')}") # Optional: for debugging
+    return _original_torch_load(*args, **kwargs)
+
+# Monkey-patch torch.load
+torch.load = custom_torch_load
+# --- END OF CUSTOM PATCH ---
+
 
 def get_args_parser(add_help=True):
     parser = argparse.ArgumentParser(description='YOLOv6 PyTorch Inference.', add_help=add_help)

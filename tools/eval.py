@@ -14,7 +14,21 @@ from yolov6.core.evaler import Evaler
 from yolov6.utils.events import LOGGER
 from yolov6.utils.general import increment_name, check_img_size
 from yolov6.utils.config import Config
+import functools
 
+# Store the original torch.load function
+_original_torch_load = torch.load
+
+def custom_torch_load(*args, **kwargs):
+    # If 'weights_only' is not explicitly set, set it to False
+    if 'weights_only' not in kwargs:
+        kwargs['weights_only'] = False
+    print(f"DEBUG: torch.load called with weights_only={kwargs.get('weights_only', 'default_was_True_now_False')}") # Optional: for debugging
+    return _original_torch_load(*args, **kwargs)
+
+# Monkey-patch torch.load
+torch.load = custom_torch_load
+# --- END OF CUSTOM PATCH ---
 def boolean_string(s):
     if s not in {'False', 'True'}:
         raise ValueError('Not a valid boolean string')
